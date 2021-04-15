@@ -1,3 +1,5 @@
+package tutorapp
+
 import scala.util.matching.Regex
 import scala.io.StdIn
 import java.io.FileNotFoundException
@@ -12,7 +14,7 @@ class Cli {
         do{
             printMenuOptions()
 
-            var userInput:String = StdIn.readLine()
+            var userInput:String = StdIn.readLine() //blocking
             
             userInput match {
                 case commandPattern(cmd, arg) if cmd == "echo" => {
@@ -49,9 +51,6 @@ class Cli {
         List(
             "Menu options:",
             "echo [word]: repeats word back to you",
-            "getfiles: lists files in current directory",
-            "first100chars [filename]: print the first 100 characters of a file",
-            "wordcount [filename]: print the count of each word in a file",
             "exit: exits WC CLI"
             ).foreach(println)
     }

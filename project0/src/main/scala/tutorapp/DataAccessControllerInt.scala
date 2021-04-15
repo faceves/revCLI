@@ -1,3 +1,5 @@
+package tutorapp
+
 trait DataAccessControllerInt {
    def getAllStudents(): List[String]
    def createStudent(student:String) : String

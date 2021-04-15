@@ -1,3 +1,5 @@
+package tutorapp
+
 import scala.util.Using
 
 object DataAccessController extends DataAccessControllerInt {
