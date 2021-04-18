@@ -7,7 +7,7 @@ import ArgonautScalaz._
 
 
 object JSONUtil {
-
+    /**
     implicit def USStateCodecJson: CodecJson[USState] =
             casecodec14(USState.apply, USState.unapply)("state", "population", "populationUSARank", 
             "pcOfUSAPopulation", "mortalityRate", "pcOfUSADeaths", "pcOfUSAActiveCases", 
@@ -20,4 +20,5 @@ object JSONUtil {
             Parse.decodeOption[List[USState]](stateString)
         option
     }
+    **/
 }

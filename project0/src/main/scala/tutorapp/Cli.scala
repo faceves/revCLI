@@ -3,6 +3,7 @@ package tutorapp
 import scala.util.matching.Regex
 import scala.io.StdIn
 import java.io.FileNotFoundException
+import org.postgresql.util.PSQLException
 
 class Cli {
     private val commandPattern: Regex =  "(\\w+)\\s*(.*)".r
@@ -20,7 +21,16 @@ class Cli {
                 case commandPattern(cmd, arg) if cmd == "echo" => {
                     println(arg)
                 }
-                
+                case commandPattern(cmd, arg) if cmd == "conn" => {
+                    try{
+                        var conn = ConnectionUtil.getConnection()
+                    }
+                    catch{
+                        case e: PSQLException => println(e.getMessage())
+                    }
+                    
+                    
+                }
                 case commandPattern(cmd, arg) if cmd == "exit" => {
                     contMenuLoop = false
                 }
