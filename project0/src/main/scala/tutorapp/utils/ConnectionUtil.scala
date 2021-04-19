@@ -11,6 +11,8 @@ object ConnectionUtil {
     //environment variables for database login
     val dbUsernameEnv = "DB_USERNAME"
     val dbPasswordEnv = "DB_PASSWORD"
+    val dbConnectionPort = "jdbc:postgresql://localhost:5432/"
+    val dbName = ""
 
     /** utility for retrieving connection
         *
@@ -28,7 +30,7 @@ object ConnectionUtil {
 
             //grab connection for database through JDBC Java Drivermanager
             conn = DriverManager.getConnection(
-                "jdbc:postgresql://localhost:5432/", 
+                dbConnectionPort + dbName, 
                 getDBLoginInfo("username"),
                 getDBLoginInfo("password")
                 )
