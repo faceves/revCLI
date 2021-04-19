@@ -21,12 +21,12 @@ object ConnectionUtil {
         * @return Connection
         */
     def getConnection(): Connection = {
-
+        var conn = null
         // if conn is null or closed, initialize it
         if (conn == null || conn.isClosed()) {
             classOf[org.postgresql.Driver].newInstance() // manually load the Driver
 
-            //grab connection for database through Java Drivermanager
+            //grab connection for database through JDBC Java Drivermanager
             conn = DriverManager.getConnection(
                 "jdbc:postgresql://localhost:5432/", 
                 getDBLoginInfo("username"),
@@ -38,7 +38,6 @@ object ConnectionUtil {
     }
 
     private def getDBLoginInfo(loginCredential:String): String = {
-        println()
         var loginInfo : Option[String] = None
         if(loginCredential.equals("username"))
             loginInfo = sys.env.get(dbUsernameEnv)
