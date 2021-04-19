@@ -1,8 +1,8 @@
-package tutorapp
+package tutorapp.objHolders
 
 import java.sql.ResultSet
 
-case class Student(fname: String, lname: String, studentID: Int, classID: Int, classGrade: Char){}
+case class Student(fname: String, lname: String, studentID: Int, classID: Int, classGrade: Float){}
 
 object Student{
   /**Transforms the result set information into objects. **/
@@ -13,7 +13,7 @@ object Student{
                         rs.getString(2),
                         rs.getInt(3),
                         rs.getInt(4),
-                        rs.getCharacterStream(5)
+                        rs.getFloat(5)
                       )
     studentObj
   }
