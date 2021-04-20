@@ -16,23 +16,22 @@ object StudentDAO {
     * @return
     */
 
-    def getStudentList(classID: String) : ArrayBuffer[Student] = {
+    def getStudentListFromClass(classID: String) : ArrayBuffer[Student] = {
         try{
             //get connection
             val conn = ConnectionUtil.getConnection()
             //prepare postgresql statement
-            val statement = conn.prepareStatement("SELECT First Name, Last Name, StudentID FROM Student WHERE classID = ?")
+            val statement: prepareStatement = conn.prepareStatement("SELECT First Name, Last Name, StudentID FROM Student WHERE classID = ?")
             statement.setString(1,classID)
             statement.execute()
             //grab result set from database
             val rs = statement.getResultSet()
             //proccess data into ArrayBuffer
-            val studentList:ArrayBuffer[Student] = ArrayBuffer()
+            val studentList:ArrayBuffer[Student] = ArrayBuffer[Student]()
             while(rs.next()){
-                studentList.+=(Student.fromResultSet(rs))
+                studentList.+=(Student.objectifyResultSet(rs))
             }
-
-
+            studentList 
         }
         catch{
             case e: Exception => e.printStackTrace()
@@ -40,6 +39,21 @@ object StudentDAO {
         finally{
             if(conn!=null)
                 conn.close()
+        }
+        
+    }
+
+    def updateStudentClassGrade(studentID: Int, classGrade: Float): Try[Boolean] = {
+        //get connection
+        val conn = ConnectionUtil.getConnection()
+        Using.Manager{ use =>
+            //prepare postgresql statement
+            val statement: prepareStatement = use(conn.prepareStatement("UPDATE Student SET classGrade = ? WHERE studentID = ?"))
+            statement.setString(2, studentID)
+            statement.setString(1, classGrade)
+            statement.execute()
+            //check to make sure it updated ----- this last statement resultgets returned to Manager which is wrapped into a Try
+            stmt.getUpdateCount() > 0 
         }
         
     }

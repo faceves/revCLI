@@ -1,4 +1,4 @@
-package tutorapp
+package tutorapp.utils
 
 import java.sql.Connection
 import java.sql.DriverManager
