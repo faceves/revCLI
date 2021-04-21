@@ -22,19 +22,23 @@ class Cli {
             var userInput:String = StdIn.readLine() //blocking
             
             userInput match {
-                case commandPattern(cmd, arg) if cmd == "echo" => {
-                    println(arg)
+                case commandPattern(cmd, arg) if cmd == "studentlist" => {
+                        runStudentListMenu()                    
                 }
-                case commandPattern(cmd, arg) if cmd == "conn" => {
-                    try{
-                        runGetStudentListMenu()
-                        var conn = ConnectionUtil.getConnection()
-                    }
-                    catch{
-                        case e: PSQLException => println(e.getMessage())
-                    }
-                    
-                    
+                case commandPattern(cmd, arg) if cmd == "student" => {
+                        runStudentListMenu()                    
+                }
+                case commandPattern(cmd, arg) if cmd == "update" => {
+                        runStudentListMenu()                    
+                }
+                case commandPattern(cmd, arg) if cmd == "add" => {
+                        runStudentListMenu()                    
+                }
+                case commandPattern(cmd, arg) if cmd == "update" => {
+                        runStudentListMenu()                    
+                }
+                case commandPattern(cmd, arg) if cmd == "delete" => {
+                        runStudentListMenu()                    
                 }
                 case commandPattern(cmd, arg) if cmd == "exit" => {
                     contMenuLoop = false
@@ -55,7 +59,7 @@ class Cli {
      * Output: nothing
      * */
     private def printGreeting():Unit = {
-        println("Hello")
+        println("Welcome to the Tutorapp!\n")
     }
 
     /** Display Menu Options to console
@@ -64,13 +68,18 @@ class Cli {
      * */
     private def printMenuOptions():Unit = {
         List(
-            "Menu options:",
-            "echo [word]: repeats word back to you",
-            "exit: exits WC CLI"
+            "Menu Options:",
+            "-------------",
+            "studentlist: Retrieves a student list given a class id.",
+            "student: Retrieves a student including their grade.",
+            "update: Updates a student's midterm exam.",
+            "add: Add's a student",
+            "delete: Delete's a student given their student id.",
+            "exit: Exits the app.\n"
             ).foreach(println)
     }
 
-    def runGetStudentListMenu(): Unit = {
+    def runStudentListMenu(): Unit = {
         var userDone = false
         var userInput =  ""
 
@@ -80,7 +89,7 @@ class Cli {
             userInput = StdIn.readLine()
             val studentList: ArrayBuffer[Student] = StudentDAO.getStudentListFromClass(userInput.toInt)
             studentList.foreach(println)
-            print("\nDone? y or n")
+            print("\nDone? y or n\n")
             userInput = StdIn.readLine()
             if(userInput == "y")
                 userDone = true
