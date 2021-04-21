@@ -6,6 +6,7 @@ import scala.io.StdIn
 import java.io.FileNotFoundException
 import org.postgresql.util.PSQLException
 import tutorapp.dao.StudentDAO
+import tutorapp.dao.ExamsDAO
 import tutorapp.objHolders.Student
 import scala.collection.mutable.ArrayBuffer
 
@@ -28,17 +29,23 @@ class Cli {
                 case commandPattern(cmd, arg) if cmd == "student" => {
                         println(StudentDAO.getStudent(0))                    
                 }
+                case commandPattern(cmd, arg) if cmd == "getstudentexams" => {
+                        println(ExamsDAO.getStudentExams(10))                    
+                }
                 case commandPattern(cmd, arg) if cmd == "update" => {
                         println(StudentDAO.updateStudentClassGrade(6, 95.25f))                  
                 }
                 case commandPattern(cmd, arg) if cmd == "add" => {
                         println(StudentDAO.insertStudent("frank", "ace",99.99f,2))                    
                 }
+                case commandPattern(cmd, arg) if cmd == "addexams" => {
+                        println(ExamsDAO.insertExams(22.3f,22.3f,22.3f,22.3f,10))                    
+                }
                 case commandPattern(cmd, arg) if cmd == "update" => {
                         runStudentListMenu()                    
                 }
                 case commandPattern(cmd, arg) if cmd == "delete" => {
-                        println(StudentDAO.deleteStudent(7))                  
+                        println(StudentDAO.deleteStudent(10))                  
                 }
                 case commandPattern(cmd, arg) if cmd == "exit" => {
                     contMenuLoop = false
