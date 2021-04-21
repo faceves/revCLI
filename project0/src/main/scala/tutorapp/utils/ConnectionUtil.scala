@@ -12,7 +12,7 @@ object ConnectionUtil {
     val dbUsernameEnv = "DB_USERNAME"
     val dbPasswordEnv = "DB_PASSWORD"
     val dbConnectionPort = "jdbc:postgresql://localhost:5432/"
-    val dbName = ""
+    val dbName = "tutorapp"
 
     /** utility for retrieving connection
         *
@@ -23,14 +23,14 @@ object ConnectionUtil {
         * @return Connection
         */
     def getConnection(): Connection = {
-        var conn = null
+        var conn: Connection = null
         // if conn is null or closed, initialize it
         if (conn == null || conn.isClosed()) {
             classOf[org.postgresql.Driver].newInstance() // manually load the Driver
 
             //grab connection for database through JDBC Java Drivermanager
             conn = DriverManager.getConnection(
-                dbConnectionPort + dbName, 
+                dbConnectionPort.concat(dbName), 
                 getDBLoginInfo("username"),
                 getDBLoginInfo("password")
                 )
@@ -48,7 +48,6 @@ object ConnectionUtil {
     
         loginInfo match{
             case Some(s) => {
-                println(s) 
                 s
             }
             case None => { 

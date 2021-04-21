@@ -4,25 +4,27 @@ package tutorapp.dao
 //import com.revature.bookapp.utils.ConnectionUtil
 import scala.util.Using
 import scala.collection.mutable.ArrayBuffer
+import scala.util.Try
+import java.sql.Connection
 import tutorapp.utils.ConnectionUtil
+import tutorapp.objHolders.Student
 
 object StudentDAO {
     /**  A student database access object with CRUD operations. All Database logic for Student is located in this class.**/
-    case class Exams(){}
-    case class Student(){}
 
      /** Retrieves all Books from the book table in the db
     *
     * @return
     */
 
-    def getStudentListFromClass(classID: String) : ArrayBuffer[Student] = {
+    def getStudentListFromClass(classID: Int) : ArrayBuffer[Student] = {
+        var conn: Connection = null;
         try{
             //get connection
-            val conn = ConnectionUtil.getConnection()
+            conn = ConnectionUtil.getConnection()
             //prepare postgresql statement
-            val statement: prepareStatement = conn.prepareStatement("SELECT First Name, Last Name, StudentID FROM Student WHERE classID = ?")
-            statement.setString(1,classID)
+            val statement = conn.prepareStatement("SELECT * FROM Student WHERE classID = ?")
+            statement.setInt(1,classID)
             statement.execute()
             //grab result set from database
             val rs = statement.getResultSet()
@@ -34,7 +36,9 @@ object StudentDAO {
             studentList 
         }
         catch{
-            case e: Exception => e.printStackTrace()
+            case e: Exception => {println(e.getMessage())
+                                println("in catch")
+                                ArrayBuffer[Student]()}
         }
         finally{
             if(conn!=null)
@@ -44,17 +48,26 @@ object StudentDAO {
     }
 
     def updateStudentClassGrade(studentID: Int, classGrade: Float): Try[Boolean] = {
-        //get connection
-        val conn = ConnectionUtil.getConnection()
+        
         Using.Manager{ use =>
+            //get connection
+            val conn: Connection = use(ConnectionUtil.getConnection())
             //prepare postgresql statement
-            val statement: prepareStatement = use(conn.prepareStatement("UPDATE Student SET classGrade = ? WHERE studentID = ?"))
-            statement.setString(2, studentID)
-            statement.setString(1, classGrade)
+            val statement = use(conn.prepareStatement("UPDATE Student SET classGrade = ? WHERE studentID = ?"))
+            statement.setInt(2, studentID)
+            statement.setFloat(1, classGrade)
             statement.execute()
-            //check to make sure it updated ----- this last statement resultgets returned to Manager which is wrapped into a Try
-            stmt.getUpdateCount() > 0 
+            //check to make sure it updated ----- this last statement result gets returned to Manager which is wrapped into a Try
+            statement.getUpdateCount() > 0 
         }
+        
+    }
+
+    def insertStudent():Unit = {
+
+    }
+
+    def deleteStudent():Unit = {
         
     }
 
