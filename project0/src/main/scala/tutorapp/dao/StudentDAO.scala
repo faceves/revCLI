@@ -4,7 +4,7 @@ package tutorapp.dao
 //import com.revature.bookapp.utils.ConnectionUtil
 import scala.util.Using
 import scala.collection.mutable.ArrayBuffer
-import scala.util.Try
+import scala.util.{Try, Success, Failure}
 import java.sql.Connection
 import tutorapp.utils.ConnectionUtil
 import tutorapp.objHolders.Student
@@ -47,6 +47,24 @@ object StudentDAO {
         
     }
 
+    def getStudent(studentID: Int): Try[Student] = {
+
+        Using.Manager{ use =>
+            //get connection
+            val conn: Connection = use(ConnectionUtil.getConnection())
+            //prepare postgresql statement
+            val statement = use(conn.prepareStatement("SELECT * FROM Student WHERE studentid= ?"))
+            statement.setInt(1, studentID)
+            statement.execute()
+            val rs = use(statement.getResultSet())
+            //grab the one record
+            if(rs.next())
+                Student.objectifyResultSet(rs)
+            else
+                throw new Exception("No student found!") //Manager will catch and wrap it in a Failure
+        }    
+    }
+
     def updateStudentClassGrade(studentID: Int, classGrade: Float): Try[Boolean] = {
         
         Using.Manager{ use =>
@@ -63,12 +81,35 @@ object StudentDAO {
         
     }
 
-    def insertStudent():Unit = {
-
+    def insertStudent(fname: String, lname: String, classGrade: Float, classID: Int): Try[Boolean]= {
+        
+        Using.Manager{ use =>
+            //get connection
+            val conn: Connection = use(ConnectionUtil.getConnection())
+            //prepare postgresql statement
+            val statement = use(conn.prepareStatement("INSERT INTO Student (fname, lname, classgrade, classid)" +
+                                                        "values (?, ? ,? ,?)"))                                         
+            statement.setString(1, fname)
+            statement.setString(2, lname)
+            statement.setFloat(3, classGrade)
+            statement.setInt(4, classID)
+            //exectues and returns the number of rows updated/changed if any
+            statement.executeUpdate() > 0
+            
+        }   
     }
 
-    def deleteStudent():Unit = {
-        
+    def deleteStudent(studentID: Int):Try[Boolean] = {
+        Using.Manager{ use =>
+            //get connection
+            val conn: Connection = use(ConnectionUtil.getConnection())
+            //prepare postgresql statement
+            val statement = use(conn.prepareStatement("DELETE FROM Student WHERE studentid = ?"))                                         
+            statement.setInt(1, studentID)
+            //exectues and returns the number of rows updated/changed if any
+            statement.executeUpdate() > 0
+            
+        } 
     }
 
     /**

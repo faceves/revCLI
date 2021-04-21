@@ -26,25 +26,25 @@ class Cli {
                         runStudentListMenu()                    
                 }
                 case commandPattern(cmd, arg) if cmd == "student" => {
-                        runStudentListMenu()                    
+                        println(StudentDAO.getStudent(0))                    
                 }
                 case commandPattern(cmd, arg) if cmd == "update" => {
-                        runStudentListMenu()                    
+                        println(StudentDAO.updateStudentClassGrade(6, 95.25f))                  
                 }
                 case commandPattern(cmd, arg) if cmd == "add" => {
-                        runStudentListMenu()                    
+                        println(StudentDAO.insertStudent("frank", "ace",99.99f,2))                    
                 }
                 case commandPattern(cmd, arg) if cmd == "update" => {
                         runStudentListMenu()                    
                 }
                 case commandPattern(cmd, arg) if cmd == "delete" => {
-                        runStudentListMenu()                    
+                        println(StudentDAO.deleteStudent(7))                  
                 }
                 case commandPattern(cmd, arg) if cmd == "exit" => {
                     contMenuLoop = false
                 }
                 case commandPattern(cmd, arg) => {
-                    println(s"Parsed command $cmd with args $arg did not correspond to an option")
+                    println(s"Parsed command $cmd with args $arg  did not correspond to an option")
                 }
                 case _ => {
                     println("Failed to parse command.")
@@ -68,12 +68,12 @@ class Cli {
      * */
     private def printMenuOptions():Unit = {
         List(
-            "Menu Options:",
+            "\nMenu Options:",
             "-------------",
             "studentlist: Retrieves a student list given a class id.",
             "student: Retrieves a student including their grade.",
             "update: Updates a student's midterm exam.",
-            "add: Add's a student",
+            "add: Add's a student.",
             "delete: Delete's a student given their student id.",
             "exit: Exits the app.\n"
             ).foreach(println)
@@ -95,4 +95,21 @@ class Cli {
                 userDone = true
         }while(!userDone)
     }
+/**
+    def runUpdateStudentMenu(): Unit = {
+        var userDone = false
+        var userInput =  ""
+
+        do{
+            println("Enter the Student ID as an int then the Class Grade as a float (ex. 2 99.5 ): ")
+            userInput = StdIn.readLine()
+            val commandPattern: Regex = "([1-9])\\s+"
+            val studentList: ArrayBuffer[Student] = StudentDAO.getStudentListFromClass(userInput.toInt)
+            studentList.foreach(println)
+            print("\nDone? y or n\n")
+            userInput = StdIn.readLine()
+            if(userInput == "y")
+                userDone = true
+        }while(!userDone)
+    } **/
 }
