@@ -30,7 +30,7 @@ class Cli {
                         println(StudentDAO.getStudent(0))                    
                 }
                 case commandPattern(cmd, arg) if cmd == "getstudentexams" => {
-                        println(ExamsDAO.getStudentExams(10))                    
+                        println(ExamsDAO.getStudentExamsExtensive(1))                    
                 }
                 case commandPattern(cmd, arg) if cmd == "update" => {
                         println(StudentDAO.updateStudentClassGrade(6, 95.25f))                  
@@ -66,7 +66,7 @@ class Cli {
      * Output: nothing
      * */
     private def printGreeting():Unit = {
-        println("Welcome to the Tutorapp!\n")
+        println("\nWelcome to the Tutorapp!")
     }
 
     /** Display Menu Options to console

@@ -5,6 +5,7 @@ import scala.util.{Try, Success, Failure}
 import java.sql.Connection
 import tutorapp.utils.ConnectionUtil
 import tutorapp.objHolders.Exams
+import tutorapp.objHolders.Student
 
 object ExamsDAO {
   def insertExams(exam1: Float, exam2: Float, miderm: Float, finalExam: Float,
@@ -38,4 +39,24 @@ object ExamsDAO {
                 throw new Exception(s"No Exams found for Student with ID: $studentID!") //Manager will catch and wrap it in a Failure
         }
   }
+
+  def getStudentExamsExtensive(studentID: Int): Try[(Student,Exams)] = {
+        Using.Manager{ use =>
+                val conn: Connection = use(ConnectionUtil.getConnection())
+                val statement = use(conn.prepareStatement("SELECT fname, lname, student.studentid, classgrade, exam1, exam2," +
+                                                        " midterm, finalexam FROM student INNER JOIN Exams " +
+                                                        "ON Student.studentid = Exams.studentid WHERE student.studentid = ?;"))
+                statement.setInt(1, studentID)
+                statement.execute()
+                val rs = use(statement.getResultSet())
+                //grab the one record
+                if(rs.next()){
+                    //return a tuple of (Student, Exams)
+                    ( Student.objectifyResultSet(rs.getInt(3), rs.getString(1), rs.getString(2),rs.getFloat(4)),
+                      Exams.objectifyResultSet(rs.getFloat(5), rs.getFloat(6), rs.getFloat(7), rs.getFloat(8)) )
+                }
+                else
+                    throw new Exception(s"No Student or Exams found for Student with ID: $studentID!") //Manager will catch and wrap it in a Failure
+        }
+    }
 }
