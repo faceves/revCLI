@@ -78,9 +78,11 @@ class Cli {
             "\nMenu Options:",
             "-------------",
             "studentlist: Retrieves a student list given a class id.",
-            "student: Retrieves a student including their grade.",
+            "student: Retrieves a student including their class grade.",
+            "studentexams: Retrieves a student exams grades.",
             "update: Updates a student's midterm exam.",
             "add: Add's a student.",
+            "addexams: Add's a student exams.",
             "delete: Delete's a student given their student id.",
             "exit: Exits the app.\n"
             ).foreach(println)
