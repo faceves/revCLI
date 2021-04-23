@@ -7,7 +7,7 @@ import ArgonautScalaz._
 
 
 object JSONUtil {
-
+    //http://argonaut.io/doc/codec/
     implicit def StudentCodecJson: CodecJson[Student] =
             casecodec14(Student.apply(), Student.unapply())("studentID", "fname", "lname", "classGrade", "classID")
 
