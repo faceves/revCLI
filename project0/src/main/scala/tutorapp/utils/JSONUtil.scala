@@ -7,18 +7,18 @@ import ArgonautScalaz._
 
 
 object JSONUtil {
-    /**
-    implicit def USStateCodecJson: CodecJson[USState] =
-            casecodec14(USState.apply, USState.unapply)("state", "population", "populationUSARank", 
-            "pcOfUSAPopulation", "mortalityRate", "pcOfUSADeaths", "pcOfUSAActiveCases", 
-            "pcOfUSARecovered", "pcOfUSATotalCases", "totalCases", "newCases", "totalDeaths", 
-            "newDeaths", "totalActiveCases")
 
-    def getStateList(stateString: String): Option[List[USState]] = {
-        
-        val option: Option[List[USState]] =
-            Parse.decodeOption[List[USState]](stateString)
+    implicit def StudentCodecJson: CodecJson[Student] =
+            casecodec14(Student.apply(), Student.unapply())("studentID", "fname", "lname", "classGrade", "classID")
+
+
+    /**Uses Argonaut library to Parse and Decode the Json file that is a string**/
+    def getStudentList(studentString: String) : Option[List[Student]] = {
+         // Decode ignoring error messages
+        val option: Option[List[Student]] = 
+                    Parse.decodeOption[List[Student]](studentString)
         option
     }
-    **/
+    
+    
 }
