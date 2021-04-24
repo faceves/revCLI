@@ -1,0 +1,30 @@
+[
+    { 
+      "studentID": "0",
+      "fname": "Ahzya",
+      "lname": "Lebanon",
+      "classGrade": "88.8",
+      "classID": "3"
+    },
+    { 
+        "studentID": "0",
+        "fname": "Alex",
+        "lname": "Sava",
+        "classGrade": "12.33",
+        "classID": "3"
+    },
+    { 
+        "studentID": "0",
+        "fname": "Jovan",
+        "lname": "Larm",
+        "classGrade": "77.65",
+        "classID": "3"
+    },
+    { 
+        "studentID": "0",
+        "fname": "Glory",
+        "lname": "Beap",
+        "classGrade": "98.45",
+        "classID": "1"
+    }
+]
