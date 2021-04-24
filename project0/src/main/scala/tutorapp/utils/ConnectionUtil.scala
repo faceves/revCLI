@@ -29,10 +29,11 @@ object ConnectionUtil {
             classOf[org.postgresql.Driver].newInstance() // manually load the Driver
 
             //grab connection for database through JDBC Java Drivermanager
-            conn = DriverManager.getConnection(
+            conn = 
+                DriverManager.getConnection(
                 dbConnectionPort.concat(dbName), 
                 getDBLoginInfo("username"),
-                getDBLoginInfo("password")
+                getDBLoginInfo("password") 
                 )
         }
         // return conn, potentially after initialization

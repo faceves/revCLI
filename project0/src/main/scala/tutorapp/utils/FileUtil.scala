@@ -3,21 +3,34 @@ package tutorapp.utils
 import java.io.File
 import java.io.FileNotFoundException
 object FileUtil {
-   /**
-    def createFile():File = {
+   
+    /**
+    * Retrieves the text content of a file as a string.
+    * 
+    * Accessing files is an exception-prone process -- it's very easy for some problems to occur
+    * We should keep this in mind
+    *
+    * @throws FileNotFoundException
+    * @param filename
+    * @return entire file content
+    */
+  def getTextContent(filename: String): String = {
+    //Whenever we open an external resource like a file or a database connection
+    // we want to close it once we're done with it.  Otherwise it remains open, using our
+    // resources and a connection slot on our DB server (until it gets cleaned up at some future point)
 
-    }
+    //declare our opened file
+    var openedFile: BufferedSource = null
 
-    def readFile():File = {
-        
+    //to ensure our connection is closed even in the case of errors, we wrap our connection logic
+    // in a try block, and we close the connection in a finally block
+    try {
+      openedFile = Source.fromFile(filename)
+      // get the entire content of the file as one big String:
+      openedFile.getLines().mkString(" ")
+    } finally {
+      if (openedFile != null) openedFile.close()
     }
-
-    def updateFile():File = {
-        
-    }
-
-    def deleteFile():File = {
-        
-    }
-    **/
+  }
+    
 }

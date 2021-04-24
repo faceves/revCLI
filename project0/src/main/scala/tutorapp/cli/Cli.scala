@@ -1,6 +1,8 @@
 package tutorapp
 
 import tutorapp.utils.ConnectionUtil
+import tutorapp.utils.FileUtil
+import tutorapp.utils.JSONUtil
 import scala.util.matching.Regex
 import scala.io.StdIn
 import java.io.FileNotFoundException
@@ -13,6 +15,15 @@ import scala.collection.mutable.ArrayBuffer
 class Cli {
     private val commandPattern: Regex =  "(\\w+)\\s*(.*)".r
 
+    def run(){
+        //check if connection is established otherwise exit
+        if(ConnectionUtil.getConnection() == null){
+            println("Database connection not established, please retry again.")
+            System.exit(1)
+        }
+        loadJSONFile()
+        menu()
+    }
     def menu(){
         var contMenuLoop : Boolean = true
 
@@ -23,6 +34,7 @@ class Cli {
             var userInput:String = StdIn.readLine() //blocking
             
             userInput match {
+                
                 case commandPattern(cmd, arg) if cmd == "studentlist" => {
                         runStudentListMenu()                    
                 }
@@ -104,6 +116,42 @@ class Cli {
                 userDone = true
         }while(!userDone)
     }
+
+    def loadJSONFile(filepath: String = ".", filename: String) : Unit = {
+        var fileString = FileUtil.getTextContent(filename)
+        var studentData = JSONUtil.getStudentList(fileString)
+        studentData match{
+            case Some(studentList) =>{
+                val conn = ConnectionUtil.getConnection()
+                studentList.foreach(StudentDAO.insertStudent())
+            }
+            case None => println("Loading JSON error.")
+        }
+
+    }
+ /**
+    def runLoadJsonMenu(argFilePath: String):Unit = {
+        var contLoop = true;
+        var userInput =  ""
+        val extractArgs = "("
+        do{
+            println("Enter file path and file name (e.g: ./ FileName.json) :\n")
+            //does not do any user input checking for formatting for args
+            StdIn.readLine() match{
+                case 
+
+            }
+
+            val studentList: ArrayBuffer[Student] = StudentDAO.getStudentListFromClass(userInput.toInt)
+            studentList.foreach(println)
+            print("\nDone? y or n\n")
+            userInput = StdIn.readLine()
+            if(userInput == "y")
+                userDone = true
+        }while(!userDone)
+    }
+    **/
+
 /**
     def runUpdateStudentMenu(): Unit = {
         var userDone = false
