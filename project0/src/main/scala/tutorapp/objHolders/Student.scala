@@ -1,6 +1,10 @@
 package tutorapp.objHolders
 
 import java.sql.ResultSet
+import scalaz._, Scalaz._
+import argonaut._, Argonaut._
+import ArgonautScalaz._
+
 
 case class Student(studentID: Int, fname: String, lname: String, classGrade: Float, classID: Int){}
 

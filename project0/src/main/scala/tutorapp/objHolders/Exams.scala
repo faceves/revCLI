@@ -1,5 +1,9 @@
 package tutorapp.objHolders
+
 import java.sql.ResultSet
+import scalaz._, Scalaz._
+import argonaut._, Argonaut._
+import ArgonautScalaz._
 
 final case class Exams(exam1: Float, exam2: Float, midterm: Float, finExam: Float, studentID: Int){}
 

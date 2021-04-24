@@ -14,6 +14,8 @@ import scala.collection.mutable.ArrayBuffer
 
 class Cli {
     private val commandPattern: Regex =  "(\\w+)\\s*(.*)".r
+    private val jsonFileName = "Students.json"
+    private val jsonFilePath = "."
 
     def run(){
         //check if connection is established otherwise exit
@@ -21,7 +23,7 @@ class Cli {
             println("Database connection not established, please retry again.")
             System.exit(1)
         }
-        loadJSONFile()
+        loadJSONFile(jsonFilePath, jsonFileName)
         menu()
     }
     def menu(){
@@ -117,18 +119,20 @@ class Cli {
         }while(!userDone)
     }
 
-    def loadJSONFile(filepath: String = ".", filename: String) : Unit = {
+    def loadJSONFile(filepath: String, filename: String) : Unit = {
         var fileString = FileUtil.getTextContent(filename)
         var studentData = JSONUtil.getStudentList(fileString)
         studentData match{
             case Some(studentList) =>{
                 val conn = ConnectionUtil.getConnection()
-                studentList.foreach(StudentDAO.insertStudent())
+                studentList.foreach((x:Student)=>StudentDAO.insertStudent(x))
             }
             case None => println("Loading JSON error.")
         }
 
     }
+
+
  /**
     def runLoadJsonMenu(argFilePath: String):Unit = {
         var contLoop = true;
@@ -170,3 +174,4 @@ class Cli {
         }while(!userDone)
     } **/
 }
+

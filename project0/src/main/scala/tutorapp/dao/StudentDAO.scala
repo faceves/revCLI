@@ -98,7 +98,7 @@ object StudentDAO {
     }
 
     def insertStudent(student: Student): Try[Boolean]= {
-        inserStudent(student.fname, student.lname, student.classGrade, student.classID)   
+        insertStudent(student.fname, student.lname, student.classGrade, student.classID)   
     }
 
     def deleteStudent(studentID: Int):Try[Boolean] = {
