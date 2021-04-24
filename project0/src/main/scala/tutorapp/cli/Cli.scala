@@ -5,6 +5,7 @@ import tutorapp.utils.FileUtil
 import tutorapp.utils.JSONUtil
 import scala.util.matching.Regex
 import scala.io.StdIn
+import scala.util.{Try, Success,Failure}
 import java.io.FileNotFoundException
 import org.postgresql.util.PSQLException
 import tutorapp.dao.StudentDAO
@@ -19,9 +20,13 @@ class Cli {
 
     def run(){
         //check if connection is established otherwise exit
-        if(ConnectionUtil.getConnection() == null){
-            println("Database connection not established, please retry again.")
-            System.exit(1)
+        val conn = Try(ConnectionUtil.getConnection())
+        conn match{
+            case Success(_) => {}
+            case Failure(e) =>{
+                println("Database connection not established, please retry again.")
+                System.exit(1)
+            }
         }
         loadJSONFile(jsonFilePath, jsonFileName)
         menu()
@@ -124,7 +129,7 @@ class Cli {
         var studentData = JSONUtil.getStudentList(fileString)
         studentData match{
             case Some(studentList) =>{
-                val conn = ConnectionUtil.getConnection()
+                //val conn = ConnectionUtil.getConnection()
                 studentList.foreach((x:Student)=>StudentDAO.insertStudent(x))
             }
             case None => println("Loading JSON error.")

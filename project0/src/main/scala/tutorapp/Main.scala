@@ -8,7 +8,8 @@ package tutorapp
 object Main {
 
   def main( args: Array[String]): Unit = {
+
     val cli = new Cli()
-    cli.menu()
+    cli.run()
   }
 }

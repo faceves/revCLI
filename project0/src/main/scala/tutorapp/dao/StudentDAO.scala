@@ -35,7 +35,6 @@ object StudentDAO {
         }
         catch{
             case e: Exception => {println(e.getMessage())
-                                println("in catch")
                                 ArrayBuffer[Student]()}
         }
         finally{

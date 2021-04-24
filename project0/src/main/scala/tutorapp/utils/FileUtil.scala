@@ -32,7 +32,14 @@ object FileUtil {
       openedFile = Source.fromFile(filename)
       // get the entire content of the file as one big String:
       openedFile.getLines().mkString(" ")
-    } finally {
+    } 
+    catch{
+      case e: FileNotFoundException => { 
+        println(e.getMessage())
+        ""
+      }
+    }
+    finally {
       if (openedFile != null) openedFile.close()
     }
   }
