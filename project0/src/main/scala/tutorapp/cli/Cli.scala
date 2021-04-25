@@ -3,6 +3,7 @@ package tutorapp
 import tutorapp.utils.ConnectionUtil
 import tutorapp.utils.FileUtil
 import tutorapp.utils.JSONUtil
+import tutorapp.utils.DatabaseUtil
 import scala.util.matching.Regex
 import scala.io.StdIn
 import scala.util.{Try, Success,Failure}
@@ -28,7 +29,7 @@ class Cli {
                 System.exit(1)
             }
         }
-        loadJSONFile(jsonFilePath, jsonFileName)
+        DatabaseUtil.loadJSONFile(jsonFilePath, jsonFileName)
         menu()
     }
     def menu(){
@@ -55,7 +56,7 @@ class Cli {
                         println(StudentDAO.updateStudentClassGrade(6, 95.25f))                  
                 }
                 case commandPattern(cmd, arg) if cmd == "add" => {
-                        println(StudentDAO.insertStudent("frank", "ace",99.99f,2))                    
+                        println(StudentDAO.insertStudent("A12456", "frank", "ace",99.99f,2))                    
                 }
                 case commandPattern(cmd, arg) if cmd == "addexams" => {
                         println(ExamsDAO.insertExams(22.3f,22.3f,22.3f,22.3f,10))                    
@@ -124,18 +125,6 @@ class Cli {
         }while(!userDone)
     }
 
-    def loadJSONFile(filepath: String, filename: String) : Unit = {
-        var fileString = FileUtil.getTextContent(filename)
-        var studentData = JSONUtil.getStudentList(fileString)
-        studentData match{
-            case Some(studentList) =>{
-                //val conn = ConnectionUtil.getConnection()
-                studentList.foreach((x:Student)=>StudentDAO.insertStudent(x))
-            }
-            case None => println("Loading JSON error.")
-        }
-
-    }
 
 
  /**

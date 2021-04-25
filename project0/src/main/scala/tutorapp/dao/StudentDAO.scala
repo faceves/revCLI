@@ -78,18 +78,19 @@ object StudentDAO {
         
     }
 
-    def insertStudent(fname: String, lname: String, classGrade: Float, classID: Int): Try[Boolean]= {
+    def insertStudent(studentID: String, fname: String, lname: String, classGrade: Float, classID: Int): Try[Boolean]= {
         
         Using.Manager{ use =>
             //get connection
             val conn: Connection = use(ConnectionUtil.getConnection())
             //prepare postgresql statement
-            val statement = use(conn.prepareStatement("INSERT INTO Student (fname, lname, classgrade, classid)" +
-                                                        "values (?, ? ,? ,?)"))                                         
-            statement.setString(1, fname)
-            statement.setString(2, lname)
-            statement.setFloat(3, classGrade)
-            statement.setInt(4, classID)
+            val statement = use(conn.prepareStatement("INSERT INTO Student (studentid, fname, lname, classgrade, classid)" +
+                                                        "values (?,?, ? ,? ,?)"))
+            statement.setString(1, studentID)                                         
+            statement.setString(2, fname)
+            statement.setString(3, lname)
+            statement.setFloat(4, classGrade)
+            statement.setInt(5, classID)
             //exectues and returns the number of rows updated/changed if any
             statement.executeUpdate() > 0
             
@@ -97,7 +98,7 @@ object StudentDAO {
     }
 
     def insertStudent(student: Student): Try[Boolean]= {
-        insertStudent(student.fname, student.lname, student.classGrade, student.classID)   
+        insertStudent(student.studentID, student.fname, student.lname, student.classGrade, student.classID)   
     }
 
     def deleteStudent(studentID: Int):Try[Boolean] = {

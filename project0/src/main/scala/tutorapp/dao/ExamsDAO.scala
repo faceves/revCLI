@@ -52,7 +52,7 @@ object ExamsDAO {
                 //grab the one record
                 if(rs.next()){
                     //return a tuple of (Student, Exams)
-                    ( Student.objectifyResultSet(rs.getInt(3), rs.getString(1), rs.getString(2),rs.getFloat(4)),
+                    ( Student.objectifyResultSet(rs.getString(3), rs.getString(1), rs.getString(2),rs.getFloat(4)),
                       Exams.objectifyResultSet(rs.getFloat(5), rs.getFloat(6), rs.getFloat(7), rs.getFloat(8)) )
                 }
                 else
