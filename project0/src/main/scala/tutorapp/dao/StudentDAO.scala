@@ -101,13 +101,13 @@ object StudentDAO {
         insertStudent(student.studentID, student.fname, student.lname, student.classGrade, student.classID)   
     }
 
-    def deleteStudent(studentID: Int):Try[Boolean] = {
+    def deleteStudent(studentID: String):Try[Boolean] = {
         Using.Manager{ use =>
             //get connection
             val conn: Connection = use(ConnectionUtil.getConnection())
             //prepare postgresql statement
             val statement = use(conn.prepareStatement("DELETE FROM Student WHERE studentid = ?"))                                         
-            statement.setInt(1, studentID)
+            statement.setString(1, studentID)
             //exectues and returns the number of rows updated/changed if any
             statement.executeUpdate() > 0
             

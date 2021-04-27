@@ -58,16 +58,13 @@ class Cli {
                         runUpdateClassGradeMenu()                  
                 }
                 case commandPattern(cmd) if cmd == "addstudent" => {
-                        println(StudentDAO.insertStudent("A12456", "frank", "ace",99.99f,2))                    
+                        runAddStudentMenu()                   
                 }
                 case commandPattern(cmd) if cmd == "addexams" => {
-                        println(ExamsDAO.insertExams(22.3f,22.3f,22.3f,22.3f,"10"))                    
-                }
-                case commandPattern(cmd) if cmd == "update" => {
-                        runStudentListMenu()                    
+                        runAddExamsMenu()                   
                 }
                 case commandPattern(cmd) if cmd == "deletestudent" => {
-                        println(StudentDAO.deleteStudent(10))                  
+                       runDeleteStudentMenu()                  
                 }
                 case commandPattern(cmd) if cmd == "exit" => {
                     contMenuLoop = false
@@ -246,6 +243,114 @@ class Cli {
         }while(!userDone)
     } 
 
+    def runAddStudentMenu():Unit = {
+        var userDone = false
+        var userInput =  ""
+        //regex:
+        //alphanumeric alpha alpha  decimal   numeric
+        //studentid    fname lname classgrade classid
+        val argPattern = "([A-z][0-9]{5})\\s+([A-z]+)\\s+([A-z]+)\\s+([0-9]+\\.?[0-9]*)\\s+([0-9]+)".r  
+          
+        do{
+            println("\nEnter the Student's information in the following format:")
+            println("STUDENTID FIRSTNAME LASTNAME CLASSGRADE CLASSID\n")
+            
+            userInput = StdIn.readLine()
+            
+            userInput match{
+                //make sure thar user input is valid
+                case argPattern(studentid, fname, lname, classgrade, classid) =>{
+                    //Makes sure that the insert is caught if an exception is thrown
+                    val addedTry = StudentDAO.insertStudent(studentid, fname, lname, classgrade.toFloat, classid.toInt) 
+                    addedTry match{
+                        case Success(added) =>{
+                            if(added){
+                                println("Added Successfully!")
+                            }
+                            else
+                                println("Add Unsuccesful! Student possibly already exists.")
+                        }
+                        case Failure(e) => println("Add Unsuccesful! Exception: " + e.getMessage())
+                    }
+                    userDone = verifyUserFinished()
+                }
+                case "exit" => userDone = true
+                case _ => println("Please enter the correct format: Alphanumeric Student ID and Class Grade in decimal form.")
+                
+            }
+        }while(!userDone)
+    }
+
+    def runAddExamsMenu():Unit = {
+        var userDone = false
+        var userInput =  ""
+        //regex:
+        //decimal decimal decimal  decimal   alphanumeric
+        //exam1    exam2  midterm  finalexam   studentid
+        val argPattern = "([0-9]+\\.?[0-9]*)\\s+([0-9]+\\.?[0-9]*)\\s+([0-9]+\\.?[0-9]*)\\s+([0-9]+\\.?[0-9]*)\\s+([A-z][0-9]{5})".r  
+          
+        do{
+            println("\nEnter the Exam's Grades in decimal for the Student in the following format:")
+            println("EXAM1 EXAM2 MIDTERM FINAL STUDENTID\n")
+            
+            userInput = StdIn.readLine()
+            
+            userInput match{
+                //make sure thar user input is valid
+                case argPattern(exam1, exam2, midterm, finalexam, studentid) =>{
+                    //Makes sure that the insert is caught if an exception is thrown
+                    val addedTry = ExamsDAO.insertExams(exam1.toFloat, exam2.toFloat, midterm.toFloat, finalexam.toFloat, studentid) 
+                    addedTry match{
+                        case Success(added) =>{
+                            if(added){
+                                println("Added Successfully!")
+                            }
+                            else
+                                println("Add Unsuccesful! Student possibly already exists.")
+                        }
+                        case Failure(e) => println("Add Unsuccesful! Exception: " + e.getMessage())
+                    }
+                    userDone = verifyUserFinished()
+                }
+                case "exit" => userDone = true
+                case _ => println("Please enter the correct format: DECIMAL DECIMAL DECIMAL DECIMAL ALPHANUMERIC.")
+                
+            }
+        }while(!userDone)
+    
+    }
+
+    def runDeleteStudentMenu():Unit = {
+        var userDone = false
+        var userInput =  ""
+        val argPattern = "([A-z][0-9]{5})".r  //alphanumeric decimal
+          
+        do{
+            println("Enter the Student ID to delete (eg: A12345 ): ")
+            userInput = StdIn.readLine()
+            
+            userInput match{
+                //make sure thar user input is valid
+                case argPattern(id) =>{
+                    //Makes sure that the update is caught if an exception is thrown
+                    StudentDAO.deleteStudent(id) match{
+                        case Success(deleted) =>{
+                            if(deleted){
+                                println("Delete Successful!")
+                            }
+                            else
+                                println("Delete Unsuccesful! Student possibly does not exist.")
+                        }
+                        case Failure(e) => println("Delete Unsuccesful! Exception: " + e.getMessage())
+                    }
+                    userDone = verifyUserFinished()
+                }
+                case "exit" => userDone = true
+                case _ => println("Please enter the correct format: Alphanumeric.\n")
+                
+            }
+        }while(!userDone)
+    }
     /**----------------- USER INPUT HELPERS-------------------**/
 
     def verifyUserFinished(): Boolean = {
@@ -253,7 +358,7 @@ class Cli {
         var isUserDone = false
         var userInput = ""
         do{
-            print("\nAre you done? y or n\n")
+            print("Are you done? y or n\n")
             userInput = StdIn.readLine()
             if(userInput == "y"){
                 isUserDone = true
