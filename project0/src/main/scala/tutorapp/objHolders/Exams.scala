@@ -5,7 +5,16 @@ import scalaz._, Scalaz._
 import argonaut._, Argonaut._
 import ArgonautScalaz._
 
-final case class Exams(exam1: Float, exam2: Float, midterm: Float, finExam: Float, studentID: String){}
+final case class Exams(exam1: Float, exam2: Float, midterm: Float, finExam: Float, studentID: String){
+    
+    def columnHeader(): String = {
+        f" Exam1 | Exam 2 | Midterm | Final Exam | Student ID"
+    }
+
+    override def toString() : String = {
+        f"$exam1%3.2f | $exam2%3.2f | $midterm%3.2f | $finExam%3.2f | $studentID"
+    }
+}
 
 object Exams{
     

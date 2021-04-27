@@ -6,7 +6,15 @@ import argonaut._, Argonaut._
 import ArgonautScalaz._
 
 
-case class Student(studentID: String, fname: String, lname: String, classGrade: Float, classID: Int){}
+case class Student(studentID: String, fname: String, lname: String, classGrade: Float, classID: Int){
+
+  def columnHeader(): String = {
+    f"Student ID | First Name | Last Name | Class Grade | Class ID"
+  }
+  override def toString() : String = {
+    f"$studentID | $fname%-15s | $lname%-15s | $classGrade%3.2f | $classID%6d"
+  }
+}
 
 object Student{
   

@@ -44,32 +44,32 @@ object StudentDAO {
         
     }
 
-    def getStudent(studentID: Int): Try[Student] = {
+    def getStudent(studentID: String): Try[Student] = {
 
         Using.Manager{ use =>
             //get connection
             val conn: Connection = use(ConnectionUtil.getConnection())
             //prepare postgresql statement
             val statement = use(conn.prepareStatement("SELECT * FROM Student WHERE studentid= ?"))
-            statement.setInt(1, studentID)
+            statement.setString(1, studentID)
             statement.execute()
             val rs = use(statement.getResultSet())
             //grab the one record
             if(rs.next())
                 Student.objectifyResultSet(rs)
             else
-                throw new Exception("No student found!") //Manager will catch and wrap it in a Failure
+                throw new Exception(s"No student found with id: $studentID!") //Manager will catch and wrap it in a Failure
         }    
     }
 
-    def updateStudentClassGrade(studentID: Int, classGrade: Float): Try[Boolean] = {
+    def updateStudentClassGrade(studentID: String, classGrade: Float): Try[Boolean] = {
         
         Using.Manager{ use =>
             //get connection
             val conn: Connection = use(ConnectionUtil.getConnection())
             //prepare postgresql statement
             val statement = use(conn.prepareStatement("UPDATE Student SET classGrade = ? WHERE studentID = ?"))
-            statement.setInt(2, studentID)
+            statement.setString(2, studentID)
             statement.setFloat(1, classGrade)
             statement.execute()
             //check to make sure it updated ----- this last statement result gets returned to Manager which is wrapped into a Try

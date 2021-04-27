@@ -9,7 +9,7 @@ import tutorapp.objHolders.Student
 
 object ExamsDAO {
   def insertExams(exam1: Float, exam2: Float, miderm: Float, finalExam: Float,
-                 studentID: Int): Try[Boolean] = {
+                 studentID: String): Try[Boolean] = {
         Using.Manager{ use =>
             val conn: Connection = use(ConnectionUtil.getConnection())
             val statement = use(conn.prepareStatement("INSERT INTO Exams (exam1, exam2, midterm, finalexam, studentid)" +
@@ -18,18 +18,18 @@ object ExamsDAO {
             statement.setFloat(2, exam2)
             statement.setFloat(3, miderm)
             statement.setFloat(4, finalExam)
-            statement.setInt(5, studentID)
+            statement.setString(5, studentID)
             //exectues and returns the number of rows updated/changed if any
             statement.executeUpdate() > 0
             
         }   
   }
 
-  def getStudentExams(studentID: Int): Try[Exams] = {
+  def getStudentExams(studentID: String): Try[Exams] = {
       Using.Manager{ use =>
             val conn: Connection = use(ConnectionUtil.getConnection())
-            val statement = use(conn.prepareStatement("SELECT * FROM Exams WHERE studentid= ?"))
-            statement.setInt(1, studentID)
+            val statement = use(conn.prepareStatement("SELECT * FROM Exams WHERE studentid = ?"))
+            statement.setString(1, studentID)
             statement.execute()
             val rs = use(statement.getResultSet())
             //grab the one record
@@ -40,13 +40,13 @@ object ExamsDAO {
         }
   }
 
-  def getStudentExamsExtensive(studentID: Int): Try[(Student,Exams)] = {
+  def getStudentExamsExtensive(studentID: String): Try[(Student,Exams)] = {
         Using.Manager{ use =>
                 val conn: Connection = use(ConnectionUtil.getConnection())
                 val statement = use(conn.prepareStatement("SELECT fname, lname, student.studentid, classgrade, exam1, exam2," +
                                                         " midterm, finalexam FROM student INNER JOIN Exams " +
                                                         "ON Student.studentid = Exams.studentid WHERE student.studentid = ?;"))
-                statement.setInt(1, studentID)
+                statement.setString(1, studentID)
                 statement.execute()
                 val rs = use(statement.getResultSet())
                 //grab the one record
