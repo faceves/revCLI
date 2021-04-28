@@ -7,12 +7,9 @@ import ArgonautScalaz._
 
 final case class Exams(exam1: Float, exam2: Float, midterm: Float, finExam: Float, studentID: String){
     
-    def columnHeader(): String = {
-        f" Exam1 | Exam 2 | Midterm | Final Exam | Student ID"
-    }
 
     override def toString() : String = {
-        f"$exam1%3.2f | $exam2%3.2f | $midterm%3.2f | $finExam%3.2f | $studentID"
+        f"$exam1%3.2f  $exam2%3.2f  $midterm%3.2f  $finExam%3.2f  $studentID"
     }
 }
 
@@ -34,5 +31,15 @@ object Exams{
     def objectifyResultSet(exam1: Float = 0.0f, exam2: Float = 0.0f, midterm: Float = 0.0f, 
                             finalExam: Float = 0.0f, studentID: String = "") : Exams = {
         apply(exam1, exam2, midterm, finalExam, studentID)
+    }
+
+    def columnHeader(): String = {
+
+        "\nExam1" + " " *2  + "Exam2" + " " *3+ "Mid"+ " "*3+ "Final" + " " *2+ "Stu ID"
+    }
+
+    def printColumnHeader(): Unit = {
+        println(columnHeader())
+        println("-"*35)
     }
 }

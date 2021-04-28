@@ -25,6 +25,10 @@ object ExamsDAO {
         }   
   }
 
+  def insertExams(exams: Exams):Try[Boolean] = {
+      insertExams(exams.exam1, exams.exam2, exams.midterm, exams.finExam, exams.studentID)
+  }
+
   def getStudentExams(studentID: String): Try[Exams] = {
       Using.Manager{ use =>
             val conn: Connection = use(ConnectionUtil.getConnection())

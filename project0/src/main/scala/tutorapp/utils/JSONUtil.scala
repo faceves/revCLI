@@ -7,6 +7,7 @@ import ArgonautScalaz._
 
 import scala.collection.immutable.List
 import tutorapp.objHolders.Student
+import tutorapp.objHolders.Exams
 
 
 object JSONUtil {
@@ -20,6 +21,17 @@ object JSONUtil {
          // Decode ignoring error messages
         val option: Option[List[Student]] = 
                     Parse.decodeOption[List[Student]](studentString)
+        option
+    }
+
+
+    implicit def ExamsCodecJson: CodecJson[Exams] =
+            casecodec5(Exams.apply, Exams.unapply)("exam1","exam2","midterm","finExam","studentID")
+
+    def getExamsList(examsString: String) : Option[List[Exams]] = {
+         // Decode ignoring error messages
+        val option: Option[List[Exams]] = 
+                    Parse.decodeOption[List[Exams]](examsString)
         option
     }
     

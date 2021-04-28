@@ -8,11 +8,8 @@ import ArgonautScalaz._
 
 case class Student(studentID: String, fname: String, lname: String, classGrade: Float, classID: Int){
 
-  def columnHeader(): String = {
-    f"Student ID |  Name | Class Grade | Class ID"
-  }
   override def toString() : String = {
-    f"$studentID | $fname%-15s | $lname%-15s | $classGrade%3.2f | $classID%6d"
+    f"$studentID%-10s $fname%-15s $lname%-15s $classGrade%11.2f $classID%8d"
   }
 }
 
@@ -36,5 +33,15 @@ object Student{
   def objectifyResultSet(studentID: String = "", fname: String = "", lname: String ="", 
                           classGrade: Float = 0.0f, classID: Int = 0) : Student = {
     apply(studentID, fname, lname, classGrade, classID)
+  }
+
+  def columnHeader(): String = {
+
+    "\nStud ID" + " " *4  + "First Name" + " " *6+ "Last Name"+ " "*12+ "C Grade" + " " *4+ "C ID"
+  }
+
+  def printColumnHeader(): Unit = {
+    println(columnHeader())
+    println("-"*67)
   }
 }

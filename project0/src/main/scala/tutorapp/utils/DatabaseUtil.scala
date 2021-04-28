@@ -29,7 +29,7 @@ object DatabaseUtil {
     }
   }
 
-  def loadJSONFile(filepath: String, filename: String) : Unit = {
+  def loadJSONFile(filepath: String, filename: String ) : Unit = {
         var fileString = FileUtil.getTextContent(filename)
         var studentData = JSONUtil.getStudentList(fileString)
         studentData match{
@@ -41,9 +41,10 @@ object DatabaseUtil {
 
                     if(!duplicatesExists){
                       studentList.foreach((x:Student)=>StudentDAO.insertStudent(x))
+                      println("Students.json succestful!")
                     }
                     else
-                      println("Duplicate exists, cancelling batch to load JSON file.")
+                      println("Duplicate exists, cancelling batch to load JSON file for Students.")
 
                   }
                   case Failure(e) => println(e.getMessage())
@@ -53,5 +54,31 @@ object DatabaseUtil {
             case None => println("Loading JSON error.")
         }
 
+  }
+
+  def loadJSONFileE (filepath: String, filename: String ) : Unit = {
+        var fileString = FileUtil.getTextContent(filename)
+        var examsData = JSONUtil.getExamsList(fileString)
+        examsData match{
+            case Some(examsList) =>{
+                //if a duplicate exists stop the loading of the file since files are loaded in batches.
+                val duplicateExistsTry = checkForDuplicates(examsList.head.studentID.toString(), "Exams")
+                duplicateExistsTry match{
+                  case Success(duplicatesExists) =>{
+
+                    if(!duplicatesExists){
+                      examsList.foreach((x:Exams)=>ExamsDAO.insertExams(x))
+                      println("Exams.json succesful!")
+                    }
+                    else
+                      println("Duplicate exists, cancelling batch to load JSON file for Exams.")
+
+                  }
+                  case Failure(e) => println(e.getMessage())
+                }
+                    
+            }
+            case None => println("Loading JSON error.")
+        }
   }
 }

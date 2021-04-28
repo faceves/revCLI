@@ -30,7 +30,7 @@ class Cli {
                 System.exit(1)
             }
         }
-        DatabaseUtil.loadJSONFile(jsonFilePath, jsonFileName)
+        //DatabaseUtil.loadJSONFile(jsonFilePath, jsonFileName)
         //DatabaseUtil.loadJSONFile(jsonFilePath, "Exams.json")
         menu()
     }
@@ -44,27 +44,31 @@ class Cli {
             var userInput:String = StdIn.readLine() //blocking
             
             userInput match {
-                
+
+                case commandPattern(cmd) if cmd == "loadjson"=>{
+                    DatabaseUtil.loadJSONFile(jsonFilePath, jsonFileName)
+                    DatabaseUtil.loadJSONFileE(jsonFilePath, "Exams.json")
+                }
                 case commandPattern(cmd) if cmd == "studentlist" => {
-                        runStudentListMenu()                    
+                    runStudentListMenu()                    
                 }
                 case commandPattern(cmd) if cmd == "student" => {
-                        runGetStudentMenu()                    
+                    runGetStudentMenu()                    
                 }
                 case commandPattern(cmd) if cmd == "studentexams" => {
-                        runStudentExamsMenu()                    
+                    runStudentExamsMenu()                    
                 }
                 case commandPattern(cmd) if cmd == "updateclassgrade" => {
-                        runUpdateClassGradeMenu()                  
+                    runUpdateClassGradeMenu()                  
                 }
                 case commandPattern(cmd) if cmd == "addstudent" => {
-                        runAddStudentMenu()                   
+                    runAddStudentMenu()                   
                 }
                 case commandPattern(cmd) if cmd == "addexams" => {
-                        runAddExamsMenu()                   
+                    runAddExamsMenu()                   
                 }
                 case commandPattern(cmd) if cmd == "deletestudent" => {
-                       runDeleteStudentMenu()                  
+                    runDeleteStudentMenu()                  
                 }
                 case commandPattern(cmd) if cmd == "exit" => {
                     contMenuLoop = false
@@ -80,32 +84,6 @@ class Cli {
         }while(contMenuLoop)
     }
 
-    /** Display welcome message to console
-     * Input: nothing
-     * Output: nothing
-     * */
-    private def printGreeting():Unit = {
-        println("\nWelcome to the Tutorapp!")
-    }
-
-    /** Display Menu Options to console
-     * Input: nothing
-     * Output: nothing
-     * */
-    private def printMenuOptions():Unit = {
-        List(
-            "\nMenu Options:",
-            "-------------",
-            "studentlist: Retrieves a student list given a class id.",
-            "student: Retrieves a student information, including their class grade.",
-            "studentexams: Retrieves a student's exams grades.",
-            "updateclassgrade: Updates a student's class grade.",
-            "addstudent: Adds a new student.",
-            "addexams: Adds a student's exams.",
-            "deletestudent: Deletes a student.",
-            "exit: Exits the app.\n"
-            ).foreach(println)
-    }
 
     def runStudentListMenu(): Unit = {
         var userDone = false
@@ -123,6 +101,8 @@ class Cli {
                     //checks to see if the class id exists, 
                     //an exception can be thrown within getStudnetListFromClass and return empty
                     if(!studentList.isEmpty){
+                        //print out result set in readable format
+                        Student.printColumnHeader()
                         studentList.foreach(println)
                         userDone = verifyUserFinished()
                     }
@@ -149,7 +129,10 @@ class Cli {
                     val studentTry: Try[Student] = StudentDAO.getStudent(id)
                     //check for exceptions, exception can consist of a message of student does not exist
                     studentTry match{
-                        case Success(student) => println(student)
+                        case Success(student) => {
+                            Student.printColumnHeader()
+                            println(student)
+                        }
                         case Failure(e) => println(e.getMessage()) 
                     }
                     userDone = verifyUserFinished()
@@ -175,7 +158,10 @@ class Cli {
                     val examsTry: Try[Exams] = ExamsDAO.getStudentExams(id)
                     //check for exceptions, exception can consist of a message of student does not exist
                     examsTry match{
-                        case Success(exams) => println(exams)
+                        case Success(exams) =>{
+                            Exams.printColumnHeader()
+                            println(exams)
+                        }
                         case Failure(e) => println( e.getMessage()) 
                     }
                     userDone = verifyUserFinished()
@@ -187,7 +173,7 @@ class Cli {
         }while(!userDone)
     }
 
- /**
+ /** TODO
     def runLoadJsonMenu(argFilePath: String):Unit = {
         var contLoop = true;
         var userInput =  ""
@@ -351,14 +337,14 @@ class Cli {
             }
         }while(!userDone)
     }
-    /**----------------- USER INPUT HELPERS-------------------**/
+    /**----------------- HELPER FUNCTIONS-------------------**/
 
     def verifyUserFinished(): Boolean = {
         var correctInput = false
         var isUserDone = false
         var userInput = ""
         do{
-            print("Are you done? y or n\n")
+            println("\nAre you finished? 'y' or 'n':")
             userInput = StdIn.readLine()
             if(userInput == "y"){
                 isUserDone = true
@@ -371,6 +357,36 @@ class Cli {
                 println("Please enter y for yes or n for no.")
         }while(!correctInput)
         isUserDone
+    }
+
+        /** Display welcome message to console
+     * Input: nothing
+     * Output: nothing
+     * */
+    private def printGreeting():Unit = {
+        println("*"*60)
+        println("\t\tWelcome to the Tutorapp!")
+        println("*"*60)
+    }
+
+    /** Display Menu Options to console
+     * Input: nothing
+     * Output: nothing
+     * */
+    private def printMenuOptions():Unit = {
+        List(
+            "\nMenu Options:",
+            "-------------",
+            "loadjson:         Loads JSON files into database.",
+            "studentlist:      Retrieves a student list given a class id.",
+            "student:          Retrieves a student information, including their class grade.",
+            "studentexams:     Retrieves a student's exams grades.",
+            "updateclassgrade: Updates a student's class grade.",
+            "addstudent:       Adds a new student.",
+            "addexams:         Adds a student's exams.",
+            "deletestudent:    Deletes a student.",
+            "exit:             Exits the app.\n"
+            ).foreach(println)
     }
 }
 
