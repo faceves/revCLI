@@ -364,6 +364,7 @@ class Cli {
      * Output: nothing
      * */
     private def printGreeting():Unit = {
+        println()
         println("*"*60)
         println("\t\tWelcome to the Tutorapp!")
         println("*"*60)
